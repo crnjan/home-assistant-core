@@ -1,0 +1,12 @@
+{
+  "domain": "regoheatpump",
+  "name": "Rego Heat Pump",
+  "codeowners": ["@crnjan"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://www.home-assistant.io/integrations/regoheatpump",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "quality_scale": "bronze",
+  "requirements": []
+}

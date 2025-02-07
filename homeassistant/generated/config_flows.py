@@ -511,6 +511,7 @@ FLOWS = {
         "rdw",
         "recollect_waste",
         "refoss",
+        "regoheatpump",
         "renault",
         "renson",
         "reolink",

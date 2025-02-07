@@ -5210,6 +5210,12 @@
       "iot_class": "local_polling",
       "single_config_entry": true
     },
+    "regoheatpump": {
+      "name": "Rego Heat Pump",
+      "integration_type": "device",
+      "config_flow": true,
+      "iot_class": "local_polling"
+    },
     "rejseplanen": {
       "name": "Rejseplanen",
       "integration_type": "hub",
