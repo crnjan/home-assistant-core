@@ -2,10 +2,9 @@
   "config": {
     "step": {
       "user": {
+        "description": "Please provide the serial interface of the heat pump",
         "data": {
-          "host": "[%key:common::config_flow::data::host%]",
-          "username": "[%key:common::config_flow::data::username%]",
-          "password": "[%key:common::config_flow::data::password%]"
+          "host": "[%key:common::config_flow::data::host%]"
         }
       }
     },

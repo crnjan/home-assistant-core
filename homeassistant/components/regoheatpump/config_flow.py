@@ -20,8 +20,6 @@ _LOGGER = logging.getLogger(__name__)
 STEP_USER_DATA_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_HOST): str,
-        vol.Required(CONF_USERNAME): str,
-        vol.Required(CONF_PASSWORD): str,
     }
 )
 
@@ -35,10 +33,6 @@ class PlaceholderHub:
     def __init__(self, host: str) -> None:
         """Initialize."""
         self.host = host
-
-    async def authenticate(self, username: str, password: str) -> bool:
-        """Test if we can authenticate with the host."""
-        return True
 
 
 async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str, Any]:
@@ -56,8 +50,8 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
 
     hub = PlaceholderHub(data[CONF_HOST])
 
-    if not await hub.authenticate(data[CONF_USERNAME], data[CONF_PASSWORD]):
-        raise InvalidAuth
+    # if not await hub.authenticate(data[CONF_USERNAME], data[CONF_PASSWORD]):
+    #    raise InvalidAuth
 
     # If you cannot connect:
     # throw CannotConnect

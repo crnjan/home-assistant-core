@@ -5,14 +5,15 @@ from __future__ import annotations
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 # TODO List the platforms that you want to support.
 # For your initial PR, limit it to 1 platform.
-_PLATFORMS: list[Platform] = [Platform.LIGHT]
+_PLATFORMS: list[Platform] = [Platform.SENSOR]
 
 # TODO Create ConfigEntry type alias with API object
 # TODO Rename type alias and update all entry annotations
-type New_NameConfigEntry = ConfigEntry[MyApi]  # noqa: F821
+type New_NameConfigEntry = ConfigEntry  # noqa: F821
 
 
 # TODO Update entry annotation
@@ -24,7 +25,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: New_NameConfigEntry) -> 
     # TODO 3. Store an API object for your platforms to access
     # entry.runtime_data = MyAPI(...)
 
-    await hass.config_entries.async_forward_entry_setups(entry, _PLATFORMS)
+    # await hass.config_entries.async_forward_entry_setups(entry, _PLATFORMS)
 
     return True
 

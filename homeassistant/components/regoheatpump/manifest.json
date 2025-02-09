@@ -7,6 +7,7 @@
   "documentation": "https://www.home-assistant.io/integrations/regoheatpump",
   "integration_type": "device",
   "iot_class": "local_polling",
+  "loggers": ["regoheatpump"],
   "quality_scale": "bronze",
   "requirements": []
 }
