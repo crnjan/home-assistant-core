@@ -22,9 +22,7 @@ class RegoEntity(Entity):
         self._heat_pump = entry.runtime_data.heat_pump
         self._register = register
 
-        self._attr_unique_id = f"{entry.entry_id}-{register.identifier.group.value}-{register.identifier.id}"
+        self._attr_unique_id = f"{entry.entry_id}-{register.identifier}"
         self._attr_device_info = entry.runtime_data.device_info
-        self._attr_translation_key = (
-            f"{register.identifier.group.value}-{register.identifier.id}"
-        )
-        # self._attr_name = f"{register.identifier.group.value}-{register.identifier.id}"
+        self._attr_translation_key = str(register.identifier)
+        # self._attr_name = str(register.identifier)
