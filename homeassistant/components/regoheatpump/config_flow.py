@@ -5,10 +5,11 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from pyrego600 import HeatPump, SerialConnection
 import voluptuous as vol
 
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
-from homeassistant.const import CONF_HOST
+from homeassistant.const import CONF_URL
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 
@@ -16,39 +17,25 @@ from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
-# TODO adjust the data schema to the data that you need
 STEP_USER_DATA_SCHEMA = vol.Schema(
     {
-        vol.Required(CONF_HOST): str,
+        vol.Required(CONF_URL): str,
     }
 )
 
 
-class PlaceholderHub:
-    """Placeholder class to make tests pass.
-
-    TODO Remove this placeholder class and replace with things from your PyPI package.
-    """
-
-    def __init__(self, host: str) -> None:
-        """Initialize."""
-        self.host = host
-
-
 async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str, Any]:
-    """Validate the user input allows us to connect.
+    """Validate the user input allows us to connect."""
 
-    Data has the keys from STEP_USER_DATA_SCHEMA with values provided by the user.
-    """
-    # TODO validate the data can be used to set up a connection.
+    connection = SerialConnection(url=data[CONF_URL])
+    hp = HeatPump(connection)
 
-    # If your PyPI package is not built with async, pass your methods
-    # to the executor:
-    # await hass.async_add_executor_job(
-    #     your_validate_func, data[CONF_USERNAME], data[CONF_PASSWORD]
-    # )
-
-    hub = PlaceholderHub(data[CONF_HOST])
+    try:
+        await hp.verify()
+    except OSError as e:
+        raise CannotConnect from e
+    finally:
+        await hp.dispose()
 
     # if not await hub.authenticate(data[CONF_USERNAME], data[CONF_PASSWORD]):
     #    raise InvalidAuth
@@ -62,7 +49,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     return {"title": "Name of the device"}
 
 
-class ConfigFlow(ConfigFlow, domain=DOMAIN):
+class RegoConfigFlow(ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Rego Heat Pump."""
 
     VERSION = 1
@@ -77,8 +64,6 @@ class ConfigFlow(ConfigFlow, domain=DOMAIN):
                 info = await validate_input(self.hass, user_input)
             except CannotConnect:
                 errors["base"] = "cannot_connect"
-            except InvalidAuth:
-                errors["base"] = "invalid_auth"
             except Exception:
                 _LOGGER.exception("Unexpected exception")
                 errors["base"] = "unknown"
@@ -92,7 +77,3 @@ class ConfigFlow(ConfigFlow, domain=DOMAIN):
 
 class CannotConnect(HomeAssistantError):
     """Error to indicate we cannot connect."""
-
-
-class InvalidAuth(HomeAssistantError):
-    """Error to indicate there is invalid auth."""

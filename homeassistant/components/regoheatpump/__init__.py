@@ -2,35 +2,48 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+
+from pyrego600 import HeatPump, SerialConnection
+
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import Platform
+from homeassistant.const import CONF_URL, Platform
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.device_registry import DeviceInfo
 
-# TODO List the platforms that you want to support.
-# For your initial PR, limit it to 1 platform.
-_PLATFORMS: list[Platform] = [Platform.SENSOR]
-
-# TODO Create ConfigEntry type alias with API object
-# TODO Rename type alias and update all entry annotations
-type New_NameConfigEntry = ConfigEntry
+from .const import DOMAIN
 
 
-# TODO Update entry annotation
-async def async_setup_entry(hass: HomeAssistant, entry: New_NameConfigEntry) -> bool:
+@dataclass
+class RegoHeatPumpRuntimeData:
+    """Foo bar."""
+
+    heat_pump: HeatPump
+    device_info: DeviceInfo
+
+
+type RegoConfigEntry = ConfigEntry[RegoHeatPumpRuntimeData]
+
+
+_PLATFORMS: list[Platform] = [Platform.BINARY_SENSOR, Platform.SENSOR]
+
+
+async def async_setup_entry(hass: HomeAssistant, entry: RegoConfigEntry) -> bool:
     """Set up Rego Heat Pump from a config entry."""
 
-    # TODO 1. Create API instance
-    # TODO 2. Validate the API connection (and authentication)
-    # TODO 3. Store an API object for your platforms to access
-    # entry.runtime_data = MyAPI(...)
+    connection = SerialConnection(url=entry.data[CONF_URL])
+    hp = HeatPump(connection)
 
-    # await hass.config_entries.async_forward_entry_setups(entry, _PLATFORMS)
+    device_info = DeviceInfo(identifiers={(DOMAIN, entry.entry_id)}, name="Heat Pump")
+
+    entry.runtime_data = RegoHeatPumpRuntimeData(hp, device_info)
+    entry.async_on_unload(hp.dispose)
+
+    await hass.config_entries.async_forward_entry_setups(entry, _PLATFORMS)
 
     return True
 
 
-# TODO Update entry annotation
-async def async_unload_entry(hass: HomeAssistant, entry: New_NameConfigEntry) -> bool:
+async def async_unload_entry(hass: HomeAssistant, entry: RegoConfigEntry) -> bool:
     """Unload a config entry."""
     return await hass.config_entries.async_unload_platforms(entry, _PLATFORMS)

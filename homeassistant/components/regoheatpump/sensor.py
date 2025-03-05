@@ -1,0 +1,67 @@
+"""Test sensor."""
+
+import logging
+
+from pyrego600 import HeatPump, Register, RegoError, Type
+
+from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, timedelta
+from homeassistant.const import UnitOfTemperature
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+
+from . import RegoConfigEntry
+
+SCAN_INTERVAL = timedelta(seconds=60)
+
+_LOGGER = logging.getLogger(__name__)
+
+
+async def async_setup_entry(
+    hass: HomeAssistant,
+    entry: RegoConfigEntry,
+    async_add_entities: AddEntitiesCallback,
+) -> None:
+    """Test."""
+    async_add_entities(
+        (
+            RegoEntity(entry, register)
+            for register in entry.runtime_data.heat_pump.registers
+            if register.type == Type.TEMPERATURE and not register.is_writtable
+        ),
+        update_before_add=True,
+    )
+
+
+class RegoEntity(SensorEntity):
+    """An entity using CoordinatorEntity."""
+
+    _heat_pump: HeatPump
+    _register: Register
+
+    _attr_has_entity_name = True
+
+    def __init__(self, entry: RegoConfigEntry, register: Register) -> None:
+        """Test."""
+        super().__init__()
+
+        self._heat_pump = entry.runtime_data.heat_pump
+        self._register = register
+
+        self._attr_unique_id = f"{entry.entry_id}.{register.identifier}"
+        self._attr_device_class = SensorDeviceClass.TEMPERATURE
+        self._attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS
+        self._attr_device_info = entry.runtime_data.device_info
+        # self._attr_translation_key = register.identifier
+        self._attr_name = str(register.identifier)
+
+    async def async_update(self) -> None:
+        """Boo."""
+        try:
+            self._attr_native_value = await self._heat_pump.read(self._register)
+            self._attr_available = True
+            self._attr_entity_registry_enabled_default = (
+                self._attr_native_value is not None
+            )
+        except (OSError, RegoError) as e:
+            self._attr_available = False
+            _LOGGER.warning("Reading %s failed due %s", self._register.identifier, e)

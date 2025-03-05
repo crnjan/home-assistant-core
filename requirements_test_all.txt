@@ -1830,6 +1830,9 @@ pyrail==0.0.3
 # homeassistant.components.rainbird
 pyrainbird==6.0.1
 
+# homeassistant.components.regoheatpump
+pyrego600==0.0.2
+
 # homeassistant.components.risco
 pyrisco==0.6.5
 
