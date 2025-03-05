@@ -52,7 +52,11 @@
         "name": "Heat Fluid Pump"
       },
       "device_values-switch_valve": {
-        "name": "Switch Valve"
+        "name": "Switch Valve",
+        "state": {
+          "off": "Heating Water",
+          "on": "DHW"
+        }
       },
       "device_values-alarm": {
         "name": "Alarm"
