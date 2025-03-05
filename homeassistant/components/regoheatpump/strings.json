@@ -4,17 +4,115 @@
       "user": {
         "description": "Please provide the serial interface of the heat pump",
         "data": {
-          "host": "[%key:common::config_flow::data::host%]"
+          "url": "[%key:common::config_flow::data::url%]"
         }
       }
     },
     "error": {
       "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]",
-      "invalid_auth": "[%key:common::config_flow::error::invalid_auth%]",
       "unknown": "[%key:common::config_flow::error::unknown%]"
     },
     "abort": {
       "already_configured": "[%key:common::config_flow::abort::already_configured_device%]"
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "front_panel-power_lamp": {
+        "name": "Power Lamp"
+      },
+      "front_panel-heat_pump_lamp": {
+        "name": "Heat Pump Lamp"
+      },
+      "front_panel-additional_heat_lamp": {
+        "name": "Additional Heat Lamp"
+      },
+      "front_panel-hot_water_lamp": {
+        "name": "Hot Water Lamp"
+      },
+      "front_panel-alarm_lamp": {
+        "name": "Alarm Lamp"
+      },
+      "device_values-cold_fluid_pump": {
+        "name": "Cold Fluid Pump"
+      },
+      "device_values-compressor": {
+        "name": "Compressor"
+      },
+      "device_values-additional_heat_3kw": {
+        "name": "Additional Heat 3kW"
+      },
+      "device_values-additional_heat_6kw": {
+        "name": "Additional Heat 6kW"
+      },
+      "device_values-radiator_pump": {
+        "name": "Radiator Pump"
+      },
+      "device_values-heat_fluid_pump": {
+        "name": "Heat Fluid Pump"
+      },
+      "device_values-switch_valve": {
+        "name": "Switch Valve"
+      },
+      "device_values-alarm": {
+        "name": "Alarm"
+      }
+    },
+    "sensor": {
+      "control_data-radiator_return_target": {
+        "name": "Radiator Return Target"
+      },
+      "control_data-radiator_return_on": {
+        "name": "Minimal Radiator Return"
+      },
+      "control_data-radiator_return_off": {
+        "name": "Maximal Radiator Return"
+      },
+      "control_data-hot_water_on": {
+        "name": "Minimal Hot Water"
+      },
+      "control_data-hot_water_off": {
+        "name": "Maximal Hot Water"
+      },
+      "control_data-radiator_forward_target": {
+        "name": "Radiator Forward Target"
+      },
+      "control_data-add_heat_power_percent": {
+        "name": "Additional Heat Power"
+      },
+      "sensor_values-radiator_return": {
+        "name": "Radiator Return"
+      },
+      "sensor_values-outdoor": {
+        "name": "Outdoor"
+      },
+      "sensor_values-hot_water": {
+        "name": "Hot Water"
+      },
+      "sensor_values-radiator_forward": {
+        "name": "Radiator Forward"
+      },
+      "sensor_values-indoor": {
+        "name": "Indoor"
+      },
+      "sensor_values-compressor": {
+        "name": "Compressor"
+      },
+      "sensor_values-heat_fluid_out": {
+        "name": "Heat Fluid Out"
+      },
+      "sensor_values-heat_fluid_in": {
+        "name": "Heat Fluid In"
+      },
+      "sensor_values-cold_fluid_in": {
+        "name": "Cold Fluid In"
+      },
+      "sensor_values-cold_fluid_out": {
+        "name": "Cold Fluid Out"
+      },
+      "sensor_values-external_hot_water": {
+        "name": "External Hot Water"
+      }
     }
   }
 }

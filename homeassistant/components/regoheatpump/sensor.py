@@ -2,7 +2,7 @@
 
 import logging
 
-from pyrego600 import HeatPump, Register, RegoError, Type
+from pyrego600 import Register, RegoError, Type
 
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, timedelta
 from homeassistant.const import UnitOfTemperature
@@ -10,6 +10,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import RegoConfigEntry
+from .entity import RegoEntity
 
 SCAN_INTERVAL = timedelta(seconds=60)
 
@@ -24,7 +25,7 @@ async def async_setup_entry(
     """Test."""
     async_add_entities(
         (
-            RegoEntity(entry, register)
+            RegoSensorEntity(entry, register)
             for register in entry.runtime_data.heat_pump.registers
             if register.type == Type.TEMPERATURE and not register.is_writtable
         ),
@@ -32,27 +33,15 @@ async def async_setup_entry(
     )
 
 
-class RegoEntity(SensorEntity):
+class RegoSensorEntity(SensorEntity, RegoEntity):
     """An entity using CoordinatorEntity."""
-
-    _heat_pump: HeatPump
-    _register: Register
-
-    _attr_has_entity_name = True
 
     def __init__(self, entry: RegoConfigEntry, register: Register) -> None:
         """Test."""
-        super().__init__()
+        super().__init__(entry, register)
 
-        self._heat_pump = entry.runtime_data.heat_pump
-        self._register = register
-
-        self._attr_unique_id = f"{entry.entry_id}.{register.identifier}"
         self._attr_device_class = SensorDeviceClass.TEMPERATURE
         self._attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS
-        self._attr_device_info = entry.runtime_data.device_info
-        # self._attr_translation_key = register.identifier
-        self._attr_name = str(register.identifier)
 
     async def async_update(self) -> None:
         """Boo."""
