@@ -116,6 +116,34 @@
       },
       "sensor_values-external_hot_water": {
         "name": "External Hot Water"
+      },
+      "info-last_error": {
+        "name": "Last Error",
+        "state": {
+          "0": "Sensor radiator return (GT1)",
+          "1": "Outdoor sensor (GT2)",
+          "2": "Sensor hot water (GT3)",
+          "3": "Mixing valve sensor (GT4)",
+          "4": "Room sensor (GT5)",
+          "5": "Sensor compressor (GT6)",
+          "6": "Sensor heat transfer fluid out (GT8)",
+          "7": "Sensor heat transfer fluid in (GT9)",
+          "8": "Sensor cold transfer fluid in (GT10)",
+          "9": "Sensor cold transfer fluid in (GT11)",
+          "10": "Compressor circuit switch",
+          "11": "Electrical cassette",
+          "12": "HTF C=pump switch (MB2)",
+          "13": "Low pressure switch (LP)",
+          "14": "High pressure switch (HP)",
+          "15": "High return HP (GT9)",
+          "16": "HTF out max (GT8)",
+          "17": "HTF in under limit (GT10)",
+          "18": "HTF out under limit (GT11)",
+          "19": "Compressor superheat (GT6)",
+          "20": "Three phase incorrect order",
+          "21": "Power failure",
+          "22": "High delta GT8/GT9"
+        }
       }
     }
   }
