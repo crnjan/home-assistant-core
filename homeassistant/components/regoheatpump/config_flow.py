@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from pyrego600 import HeatPump, SerialConnection
+from pyrego600 import HeatPump
 import voluptuous as vol
 
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
@@ -27,8 +27,7 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
 async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str, Any]:
     """Validate the user input allows us to connect."""
 
-    connection = SerialConnection(url=data[CONF_URL])
-    hp = HeatPump(connection)
+    hp = HeatPump.connect(url=data[CONF_URL])
 
     try:
         await hp.verify()

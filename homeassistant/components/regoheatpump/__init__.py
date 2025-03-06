@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from pyrego600 import HeatPump, SerialConnection
+from pyrego600 import HeatPump
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_URL, Platform
@@ -31,8 +31,7 @@ _PLATFORMS: list[Platform] = [Platform.BINARY_SENSOR, Platform.SENSOR]
 async def async_setup_entry(hass: HomeAssistant, entry: RegoConfigEntry) -> bool:
     """Set up Rego Heat Pump from a config entry."""
 
-    connection = SerialConnection(url=entry.data[CONF_URL])
-    hp = HeatPump(connection)
+    hp = HeatPump.connect(url=entry.data[CONF_URL])
 
     device_info = DeviceInfo(identifiers={(DOMAIN, entry.entry_id)}, name="Heat Pump")
 

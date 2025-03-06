@@ -3,8 +3,6 @@
 import logging
 
 from pyrego600 import Register, RegoError, Type
-from pyrego600.identifiers import Identifiers
-from pyrego600.register_factory import RegisterFactory
 
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, timedelta
 from homeassistant.const import UnitOfTemperature
@@ -25,7 +23,7 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Test."""
-    register = RegisterFactory.lastError(Identifiers.LAST_ERROR)
+    register = entry.runtime_data.heat_pump.last_error
     async_add_entities(
         [RegoLastErrorEntity(entry, register)],
         update_before_add=True,
@@ -71,8 +69,8 @@ class RegoLastErrorEntity(SensorEntity, RegoEntity):
         """Boo."""
         try:
             last_error = await self._heat_pump.read(self._register)
-            self._attr_native_value = last_error[0]
-            self.extra_state_attributes = {"timestamp": last_error[1]}
+            self._attr_native_value = last_error.code
+            self.extra_state_attributes = {"timestamp": last_error.timestamp}
             self._attr_available = True
         except (OSError, RegoError) as e:
             self._attr_available = False
