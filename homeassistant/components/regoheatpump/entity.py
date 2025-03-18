@@ -1,10 +1,14 @@
 """Test sensor."""
 
-from pyrego600 import HeatPump, Register
+import logging
+
+from pyrego600 import HeatPump, LastError, Register, RegoError
 
 from homeassistant.components.sensor import Entity
 
 from . import RegoConfigEntry
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class RegoEntity(Entity):
@@ -26,3 +30,15 @@ class RegoEntity(Entity):
         self._attr_device_info = entry.runtime_data.device_info
         self._attr_translation_key = str(register.identifier)
         # self._attr_name = str(register.identifier)
+
+    async def async_update(self) -> None:
+        """Update."""
+        try:
+            self.process_value(await self._heat_pump.read(self._register))
+            self._attr_available = True
+        except (OSError, RegoError) as e:
+            self._attr_available = False
+            _LOGGER.warning("Reading %s failed due %s", self._register.identifier, e)
+
+    def process_value(self, value: int | LastError | None) -> None:
+        """Foo."""

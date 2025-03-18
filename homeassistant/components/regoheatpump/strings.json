@@ -19,42 +19,42 @@
   "entity": {
     "binary_sensor": {
       "front_panel-power_lamp": {
-        "name": "Power Lamp"
+        "name": "Power lamp"
       },
       "front_panel-heat_pump_lamp": {
-        "name": "Heat Pump Lamp"
+        "name": "Heat pump lamp"
       },
       "front_panel-additional_heat_lamp": {
-        "name": "Additional Heat Lamp"
+        "name": "Additional heat lamp"
       },
       "front_panel-hot_water_lamp": {
-        "name": "Hot Water Lamp"
+        "name": "Hot water lamp"
       },
       "front_panel-alarm_lamp": {
-        "name": "Alarm Lamp"
+        "name": "Alarm lamp"
       },
       "device_values-cold_fluid_pump": {
-        "name": "Cold Fluid Pump"
+        "name": "Cold fluid pump"
       },
       "device_values-compressor": {
         "name": "Compressor"
       },
       "device_values-additional_heat_3kw": {
-        "name": "Additional Heat 3kW"
+        "name": "Additional heat 3kW"
       },
       "device_values-additional_heat_6kw": {
-        "name": "Additional Heat 6kW"
+        "name": "Additional heat 6kW"
       },
       "device_values-radiator_pump": {
-        "name": "Radiator Pump"
+        "name": "Radiator pump"
       },
       "device_values-heat_fluid_pump": {
-        "name": "Heat Fluid Pump"
+        "name": "Heat fluid pump"
       },
       "device_values-switch_valve": {
-        "name": "Switch Valve",
+        "name": "Switch valve",
         "state": {
-          "off": "Heating Water",
+          "off": "Heating water",
           "on": "DHW"
         }
       },
@@ -64,37 +64,37 @@
     },
     "sensor": {
       "control_data-radiator_return_target": {
-        "name": "Radiator Return Target"
+        "name": "Radiator return target"
       },
       "control_data-radiator_return_on": {
-        "name": "Minimal Radiator Return"
+        "name": "Radiator return on"
       },
       "control_data-radiator_return_off": {
-        "name": "Maximal Radiator Return"
+        "name": "Radiator return off"
       },
       "control_data-hot_water_on": {
-        "name": "Minimal Hot Water"
+        "name": "Hot water on"
       },
       "control_data-hot_water_off": {
-        "name": "Maximal Hot Water"
+        "name": "Hot water off"
       },
       "control_data-radiator_forward_target": {
-        "name": "Radiator Forward Target"
+        "name": "Radiator forward target"
       },
       "control_data-add_heat_power_percent": {
-        "name": "Additional Heat Power"
+        "name": "Additional heat power"
       },
       "sensor_values-radiator_return": {
-        "name": "Radiator Return"
+        "name": "Radiator return"
       },
       "sensor_values-outdoor": {
         "name": "Outdoor"
       },
       "sensor_values-hot_water": {
-        "name": "Hot Water"
+        "name": "Hot water"
       },
       "sensor_values-radiator_forward": {
-        "name": "Radiator Forward"
+        "name": "Radiator forward"
       },
       "sensor_values-indoor": {
         "name": "Indoor"
@@ -103,22 +103,22 @@
         "name": "Compressor"
       },
       "sensor_values-heat_fluid_out": {
-        "name": "Heat Fluid Out"
+        "name": "Heat fluid out"
       },
       "sensor_values-heat_fluid_in": {
-        "name": "Heat Fluid In"
+        "name": "Heat fluid in"
       },
       "sensor_values-cold_fluid_in": {
-        "name": "Cold Fluid In"
+        "name": "Cold fluid in"
       },
       "sensor_values-cold_fluid_out": {
-        "name": "Cold Fluid Out"
+        "name": "Cold fluid out"
       },
       "sensor_values-external_hot_water": {
-        "name": "External Hot Water"
+        "name": "Hot water external"
       },
       "info-last_error": {
-        "name": "Last Error",
+        "name": "Last error",
         "state": {
           "0": "Sensor radiator return (GT1)",
           "1": "Outdoor sensor (GT2)",
@@ -144,6 +144,18 @@
           "21": "Power failure",
           "22": "High delta GT8/GT9"
         }
+      },
+      "operating_times-heat_pump_in_operation_rad": {
+        "name": "HP in oper. - radiators"
+      },
+      "operating_times-heat_pump_in_operation_dhw": {
+        "name": "HP in oper. - DHW"
+      },
+      "operating_times-add_heat_in_operation_rad": {
+        "name": "Add. heat in oper. - DHW"
+      },
+      "operating_times-add_heat_in_operation_dhw": {
+        "name": "Add. heat in oper. - radiators"
       }
     }
   }

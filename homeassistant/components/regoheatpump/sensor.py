@@ -1,20 +1,66 @@
 """Test sensor."""
 
+from collections.abc import Callable
+from dataclasses import dataclass
 import logging
+from typing import Any
 
-from pyrego600 import Register, RegoError, Type
+from pyrego600 import LastError, Register, Type
 
-from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, timedelta
-from homeassistant.const import UnitOfTemperature
+from homeassistant.components.sensor import (
+    SensorDeviceClass,
+    SensorEntity,
+    SensorEntityDescription,
+    SensorStateClass,
+    StateType,
+    timedelta,
+)
+from homeassistant.const import UnitOfTemperature, UnitOfTime
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import RegoConfigEntry
 from .entity import RegoEntity
 
-SCAN_INTERVAL = timedelta(seconds=60)
-
 _LOGGER = logging.getLogger(__name__)
+
+SCAN_INTERVAL = timedelta(seconds=60)
+PARALLEL_UPDATES = 1
+
+
+@dataclass(frozen=True)
+class RegoSensorEntityDescription(SensorEntityDescription):
+    """Describes Example sensor entity."""
+
+    value_fn: Callable[[int | LastError], StateType] = lambda v: v
+    entity_enabled_fn: Callable[[int | LastError], bool] = lambda _: True
+    extra_attributes_fn: Callable[[int | LastError], dict[str, Any]] = lambda _: {}
+
+
+_DESCRIPTIONS = {
+    Type.TEMPERATURE: RegoSensorEntityDescription(
+        key="temperature",
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_enabled_fn=lambda value: value is not None,
+    ),
+    Type.HOURS: RegoSensorEntityDescription(
+        key="hours",
+        native_unit_of_measurement=UnitOfTime.HOURS,
+        device_class=SensorDeviceClass.DURATION,
+        state_class=SensorStateClass.TOTAL,
+    ),
+    Type.ERROR: RegoSensorEntityDescription(
+        key="last_error",
+        value_fn=lambda v: v.code
+        if isinstance(v, LastError) and v is not None
+        else None,
+        extra_attributes_fn=lambda v: {"timestamp": v.timestamp}
+        if isinstance(v, LastError) and v is not None
+        else {},
+    ),
+}
 
 
 async def async_setup_entry(
@@ -23,17 +69,11 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Test."""
-    register = entry.runtime_data.heat_pump.last_error
-    async_add_entities(
-        [RegoLastErrorEntity(entry, register)],
-        update_before_add=True,
-    )
-
     async_add_entities(
         (
-            RegoSensorEntity(entry, register)
+            RegoSensorEntity(entry, register, _DESCRIPTIONS[register.type])
             for register in entry.runtime_data.heat_pump.registers
-            if register.type == Type.TEMPERATURE and not register.is_writtable
+            if not register.is_writtable and register.type in _DESCRIPTIONS
         ),
         update_before_add=True,
     )
@@ -42,36 +82,24 @@ async def async_setup_entry(
 class RegoSensorEntity(SensorEntity, RegoEntity):
     """An entity using CoordinatorEntity."""
 
-    def __init__(self, entry: RegoConfigEntry, register: Register) -> None:
+    entity_description: RegoSensorEntityDescription
+
+    def __init__(
+        self,
+        entry: RegoConfigEntry,
+        register: Register,
+        entity_description: RegoSensorEntityDescription,
+    ) -> None:
         """Test."""
         super().__init__(entry, register)
+        self.entity_description = entity_description
 
-        self._attr_device_class = SensorDeviceClass.TEMPERATURE
-        self._attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS
-
-    async def async_update(self) -> None:
-        """Boo."""
-        try:
-            self._attr_native_value = await self._heat_pump.read(self._register)
-            self._attr_available = True
-            self._attr_entity_registry_enabled_default = (
-                self._attr_native_value is not None
-            )
-        except (OSError, RegoError) as e:
-            self._attr_available = False
-            _LOGGER.warning("Reading %s failed due %s", self._register.identifier, e)
-
-
-class RegoLastErrorEntity(SensorEntity, RegoEntity):
-    """An entity using CoordinatorEntity."""
-
-    async def async_update(self) -> None:
-        """Boo."""
-        try:
-            last_error = await self._heat_pump.read(self._register)
-            self._attr_native_value = last_error.code
-            self.extra_state_attributes = {"timestamp": last_error.timestamp}
-            self._attr_available = True
-        except (OSError, RegoError) as e:
-            self._attr_available = False
-            _LOGGER.warning("Reading %s failed due %s", self._register.identifier, e)
+    def process_value(self, value: int | LastError | None) -> None:
+        """Test."""
+        self._attr_native_value = self.entity_description.value_fn(value)
+        self._attr_entity_registry_enabled_default = (
+            self.entity_description.entity_enabled_fn(value)
+        )
+        self._attr_extra_state_attributes = self.entity_description.extra_attributes_fn(
+            value
+        )
