@@ -42,3 +42,4 @@ class RegoEntity(Entity):
 
     def process_value(self, value: int | LastError | None) -> None:
         """Foo."""
+        raise NotImplementedError
