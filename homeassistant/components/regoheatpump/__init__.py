@@ -25,7 +25,7 @@ class RegoHeatPumpRuntimeData:
 type RegoConfigEntry = ConfigEntry[RegoHeatPumpRuntimeData]
 
 
-_PLATFORMS: list[Platform] = [Platform.BINARY_SENSOR, Platform.SENSOR]
+_PLATFORMS: list[Platform] = [Platform.BINARY_SENSOR, Platform.SENSOR, Platform.NUMBER]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: RegoConfigEntry) -> bool:

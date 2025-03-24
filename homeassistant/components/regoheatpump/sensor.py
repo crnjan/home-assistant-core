@@ -34,7 +34,9 @@ class RegoSensorEntityDescription(SensorEntityDescription):
 
     value_fn: Callable[[int | LastError], StateType] = lambda v: v
     entity_enabled_fn: Callable[[int | LastError], bool] = lambda _: True
-    extra_attributes_fn: Callable[[int | LastError], dict[str, Any]] = lambda _: {}
+    extra_attributes_fn: Callable[[int | LastError], dict[str, Any] | None] = (
+        lambda _: None
+    )
 
 
 _DESCRIPTIONS = {
@@ -100,6 +102,5 @@ class RegoSensorEntity(SensorEntity, RegoEntity):
         self._attr_entity_registry_enabled_default = (
             self.entity_description.entity_enabled_fn(value)
         )
-        self._attr_extra_state_attributes = self.entity_description.extra_attributes_fn(
-            value
-        )
+        if extra_state := self.entity_description.extra_attributes_fn(value):
+            self._attr_extra_state_attributes = extra_state
